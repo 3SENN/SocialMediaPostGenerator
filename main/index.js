@@ -53,7 +53,7 @@ app.on('window-all-closed', () => {
 // ============== AI-GENERATIE ==============
 ipcMain.handle('generate-post', async (event, args) => {
     const { companyName, industry, targetAudience, platform, topic } = args;
-    const { extraDescription, tone, length } = args;
+    const { extraDescription, tone, length, language } = args; // <--- Add language
 
     let result = '';
 
@@ -66,13 +66,15 @@ ipcMain.handle('generate-post', async (event, args) => {
             extraDescription,
             tone,
             length,
+            language // pass it
         });
-    } else if (platform === 'Twitter') {
+    } else if (platform === 'X') {
         result = await generateTwitterPost({
             companyName,
             industry,
             targetAudience,
             topic,
+            language // pass it
         });
     } else if (platform === 'Instagram') {
         result = await generateInstagramPost({
@@ -80,22 +82,20 @@ ipcMain.handle('generate-post', async (event, args) => {
             industry,
             targetAudience,
             topic,
+            language // pass it
         });
     }
 
-    // Maak een history-item
+    // Create history item and return
     const newHistoryItem = {
-        id: `hist-${Date.now()}`,  // of gebruik uuid
+        id: `hist-${Date.now()}`,
         text: result,
         timestamp: new Date().toISOString(),
         platform,
         topic
     };
 
-    // Sla op in history.json
     addHistoryItem(newHistoryItem);
-
-    // Return het item terug naar renderer
     return newHistoryItem;
 });
 

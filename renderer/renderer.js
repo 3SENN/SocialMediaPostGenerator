@@ -239,6 +239,9 @@ generateBtn.addEventListener('click', async () => {
     const tone = toneInput.value.trim() || 'professioneel';
     const length = lengthInput.value.trim() || '200';
 
+    // NEW: get language
+    const language = languageSelect.value; // 'Dutch' or 'English'
+
     try {
         const response = await ipcRenderer.invoke('generate-post', {
             companyName,
@@ -249,13 +252,12 @@ generateBtn.addEventListener('click', async () => {
             extraDescription,
             tone,
             length,
+            language, // <--- pass it along
         });
 
-        // response is the historyItem with id, text, ...
         postResult.textContent = response.text;
-
-        // Refresh local history
         await loadHistory();
+
     } catch (err) {
         console.error('Fout bij genereren post:', err);
         postResult.textContent = `Er trad een fout op: ${err.message}`;
