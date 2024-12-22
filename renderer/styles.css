@@ -1,0 +1,30 @@
+/* renderer/styles.css */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, sans-serif; /* Windows-style font */
+}
+
+/* Maak de achtergrond een lichte tint */
+body {
+    background-color: #e9ecef;
+}
+
+/* Kaart-styling een beetje opkrikken (optioneel) */
+.card {
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Zorg dat list items iets meer op desktopfeel lijken */
+.list-group-item {
+    cursor: pointer;
+}
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}

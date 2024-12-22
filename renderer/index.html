@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My AI Electron App</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link
+            rel="stylesheet"
+            href="../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <!-- Eigen styles voor een “desktop look” -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-light">
+
+<div class="container-fluid p-3">
+    <h1 class="mb-4">AI Desktop App</h1>
+
+    <div class="row">
+        <!-- Linkerpaneel: Profielen -->
+        <div class="col-12 col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <strong>Profielen</strong>
+                </div>
+                <div class="card-body">
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label class="form-label">Bedrijfsnaam</label>
+                            <input type="text" class="form-control" id="newProfileName" placeholder="Naam bedrijf" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Industrie</label>
+                            <input type="text" class="form-control" id="newProfileIndustry" placeholder="Industrie" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doelgroep</label>
+                            <input type="text" class="form-control" id="newProfileAudience" placeholder="Doelgroep" />
+                        </div>
+                        <button type="submit" class="btn btn-success">Profiel opslaan</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <strong>Bestaande Profielen</strong>
+                </div>
+                <ul id="profilesList" class="list-group list-group-flush"></ul>
+            </div>
+        </div>
+
+        <!-- Rechterpaneel: Post generator -->
+        <div class="col-12 col-md-8">
+            <!-- Modal voor Tips -->
+            <div
+                    class="modal fade"
+                    id="tipsModal"
+                    tabindex="-1"
+                    aria-labelledby="tipsModalLabel"
+                    aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="tipsModalLabel">Tips voor het beste AI-resultaat</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>Context is key:</strong> Begin je prompt met een rolbeschrijving,
+                                    bijvoorbeeld: <em>“Je bent een marketing-expert gericht op het MKB…”</em>.
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Duidelijke instructies:</strong> Benoem expliciet de lengte, bullet points,
+                                    call-to-action of hashtags die je wilt.
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Extra Omschrijving:</strong> Gebruik het tekstvak voor details:
+                                    “Noem drie concrete voorbeelden van kostenbesparing.”
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Tone of Voice:</strong> Geef aan of je formeel, informeel, wervend,
+                                    inspirerend of anders wilt klinken.
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Iteratieve feedback:</strong> Als een post niet bevalt, verander je prompt
+                                    of de temperatuurinstelling. Zo krijg je gaandeweg betere resultaten.
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Temperature:</strong> Een lagere waarde (~0.2) is feitelijk en strak,
+                                    een hogere waarde (~0.8) is creatief en soms “losser”.
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Modelkeuze:</strong> GPT-4 (als beschikbaar) volgt instructies
+                                    nog nauwkeuriger dan Davinci-003.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <strong>AI Post Generator</strong>
+                    <!-- Nieuw: "i"-icoon -->
+                    <button
+                            class="btn btn-link text-white text-decoration-none"
+                            data-bs-toggle="modal"
+                            data-bs-target="#tipsModal"
+                    >
+                        <i class="bi bi-info-circle-fill" style="font-size: 1.2rem;"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Dropdown om een profiel te kiezen (vanuit local JSON) -->
+                    <div class="mb-3">
+                        <label class="form-label">Kies Profiel</label>
+                        <select class="form-select" id="profileSelect">
+                            <!-- Dynamisch vanuit JS (renderer.js) -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Platform</label>
+                        <select class="form-select" id="platform">
+                            <option value="LinkedIn" selected>LinkedIn</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="Instagram">Instagram</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Onderwerp</label>
+                        <input type="text" class="form-control" id="topicInput" placeholder="Onderwerp" />
+                    </div>
+
+                    <!-- Nieuw: extra omschrijving -->
+                    <div class="mb-3">
+                        <label class="form-label">Extra Omschrijving</label>
+                        <textarea
+                                class="form-control"
+                                id="extraDescription"
+                                rows="3"
+                                placeholder="Voeg hier extra details toe (bijv. focus op kostenbesparing, persoonlijke anekdote, etc.)"
+                        ></textarea>
+                    </div>
+
+                    <!-- Nieuw: toon (tone of voice) -->
+                    <div class="mb-3">
+                        <label class="form-label">Tone of Voice</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="toneInput"
+                                placeholder="Bijv. professioneel, informeel, wervend, inspirerend..."
+                        />
+                    </div>
+
+                    <!-- Nieuw: lengte (in woorden) -->
+                    <div class="mb-3">
+                        <label class="form-label">Gewenste Lengte (woorden, indicatief)</label>
+                        <input type="number" class="form-control" id="lengthInput" placeholder="200" />
+                    </div>
+
+                    <button id="generateBtn" class="btn btn-primary">Genereer Post</button>
+
+                    <hr class="my-4" />
+
+                    <h5>Gegenereerde Post</h5>
+                    <div
+                            id="postResult"
+                            class="border p-3"
+                            style="white-space: pre-wrap; min-height: 100px;"
+                    ></div>
+
+                    <hr class="my-4" />
+                    <h5>Historie</h5>
+                    <ul id="historyList" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Renderer Logic -->
+<script src="renderer.js"></script>
+
+</body>
+</html>
