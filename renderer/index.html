@@ -5,11 +5,7 @@
     <title>My AI Electron App</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
-    <link
-            rel="stylesheet"
-            href="../node_modules/bootstrap-icons/font/bootstrap-icons.css"
-    />
-    <!-- Eigen styles voor een “desktop look” -->
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-light">
@@ -18,8 +14,10 @@
     <h1 class="mb-4">AI Desktop App</h1>
 
     <div class="row">
-        <!-- Linkerpaneel: Profielen -->
+        <!-- LEFT COLUMN -->
         <div class="col-12 col-md-4">
+
+            <!-- PROFIELEN Card -->
             <div class="card mb-3">
                 <div class="card-header bg-primary text-white">
                     <strong>Profielen</strong>
@@ -43,74 +41,68 @@
                 </div>
             </div>
 
-            <div class="card">
+            <!-- Bestaande Profielen -->
+            <div class="card mb-3">
                 <div class="card-header bg-secondary text-white">
                     <strong>Bestaande Profielen</strong>
                 </div>
                 <ul id="profilesList" class="list-group list-group-flush"></ul>
             </div>
+
+            <!-- Prompt Frameworks -->
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <strong>Prompt Frameworks</strong>
+                </div>
+                <ul id="frameworksList" class="list-group list-group-flush"></ul>
+            </div>
+
+            <!-- History -->
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <strong>Geschiedenis</strong>
+                </div>
+                <ul id="historyList" class="list-group list-group-flush"></ul>
+            </div>
         </div>
 
-        <!-- Rechterpaneel: Post generator -->
+        <!-- RIGHT COLUMN -->
         <div class="col-12 col-md-8">
-            <!-- Modal voor Tips -->
-            <div
-                    class="modal fade"
-                    id="tipsModal"
-                    tabindex="-1"
-                    aria-labelledby="tipsModalLabel"
-                    aria-hidden="true"
-            >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="tipsModalLabel">Tips voor het beste AI-resultaat</h5>
-                            <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"
-                            ></button>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="list-unstyled">
-                                <li class="mb-2">
-                                    <strong>Context is key:</strong> Begin je prompt met een rolbeschrijving,
-                                    bijvoorbeeld: <em>“Je bent een marketing-expert gericht op het MKB…”</em>.
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Duidelijke instructies:</strong> Benoem expliciet de lengte, bullet points,
-                                    call-to-action of hashtags die je wilt.
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Extra Omschrijving:</strong> Gebruik het tekstvak voor details:
-                                    “Noem drie concrete voorbeelden van kostenbesparing.”
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Tone of Voice:</strong> Geef aan of je formeel, informeel, wervend,
-                                    inspirerend of anders wilt klinken.
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Iteratieve feedback:</strong> Als een post niet bevalt, verander je prompt
-                                    of de temperatuurinstelling. Zo krijg je gaandeweg betere resultaten.
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Temperature:</strong> Een lagere waarde (~0.2) is feitelijk en strak,
-                                    een hogere waarde (~0.8) is creatief en soms “losser”.
-                                </li>
-                                <li class="mb-2">
-                                    <strong>Modelkeuze:</strong> GPT-4 (als beschikbaar) volgt instructies
-                                    nog nauwkeuriger dan Davinci-003.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
+            <!-- Detail view for profiles -->
+            <div class="card mb-3 d-none" id="profileDetailCard">
+                <div class="card-header bg-info text-white">
+                    <strong>Profiel Detail</strong>
+                </div>
+                <div class="card-body" id="profileDetailBody">
+                    <!-- Filled dynamically -->
                 </div>
             </div>
+
+            <!-- Detail view for frameworks: (in case you want to show them) -->
+            <div class="card mb-3 d-none" id="frameworkDetailCard">
+                <div class="card-header bg-info text-white">
+                    <strong>Framework Detail</strong>
+                </div>
+                <div class="card-body" id="frameworkDetailBody">
+                    <!-- Filled dynamically if you want a detail page for frameworks -->
+                </div>
+            </div>
+
+            <!-- Detail view for history item -->
+            <div class="card mb-3 d-none" id="historyDetailCard">
+                <div class="card-header bg-info text-white">
+                    <strong>History Item Detail</strong>
+                </div>
+                <div class="card-body" id="historyDetailBody">
+                    <!-- Will show the text of the response -->
+                </div>
+            </div>
+
+            <!-- AI Generator Card (the main generator) -->
             <div class="card">
                 <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                     <strong>AI Post Generator</strong>
-                    <!-- Nieuw: "i"-icoon -->
                     <button
                             class="btn btn-link text-white text-decoration-none"
                             data-bs-toggle="modal"
@@ -120,12 +112,37 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <!-- Dropdown om een profiel te kiezen (vanuit local JSON) -->
+                    <!-- Modal for Tips -->
+                    <div
+                            class="modal fade"
+                            id="tipsModal"
+                            tabindex="-1"
+                            aria-labelledby="tipsModalLabel"
+                            aria-hidden="true"
+                    >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="tipsModalLabel">Tips for the best AI result</h5>
+                                    <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- tips content (same as your existing code) -->
+                                    <p>Tips content goes here...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown for profiel -->
                     <div class="mb-3">
                         <label class="form-label">Kies Profiel</label>
-                        <select class="form-select" id="profileSelect">
-                            <!-- Dynamisch vanuit JS (renderer.js) -->
-                        </select>
+                        <select class="form-select" id="profileSelect"></select>
                     </div>
 
                     <div class="mb-3">
@@ -142,35 +159,39 @@
                         <input type="text" class="form-control" id="topicInput" placeholder="Onderwerp" />
                     </div>
 
-                    <!-- Nieuw: extra omschrijving -->
                     <div class="mb-3">
                         <label class="form-label">Extra Omschrijving</label>
                         <textarea
                                 class="form-control"
                                 id="extraDescription"
                                 rows="3"
-                                placeholder="Voeg hier extra details toe (bijv. focus op kostenbesparing, persoonlijke anekdote, etc.)"
+                                placeholder="Voeg hier extra details toe..."
                         ></textarea>
                     </div>
 
-                    <!-- Nieuw: toon (tone of voice) -->
                     <div class="mb-3">
                         <label class="form-label">Tone of Voice</label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="toneInput"
-                                placeholder="Bijv. professioneel, informeel, wervend, inspirerend..."
+                                placeholder="Bijv. professioneel, informeel..."
                         />
                     </div>
 
-                    <!-- Nieuw: lengte (in woorden) -->
                     <div class="mb-3">
                         <label class="form-label">Gewenste Lengte (woorden, indicatief)</label>
                         <input type="number" class="form-control" id="lengthInput" placeholder="200" />
                     </div>
 
-                    <button id="generateBtn" class="btn btn-primary">Genereer Post</button>
+                    <!-- Add button to save the current Prompt as a framework -->
+                    <button id="saveFrameworkBtn" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-heart"></i> Opslaan als Framework
+                    </button>
+
+                    <button id="generateBtn" class="btn btn-primary">
+                        Genereer Post
+                    </button>
 
                     <hr class="my-4" />
 
@@ -180,11 +201,39 @@
                             class="border p-3"
                             style="white-space: pre-wrap; min-height: 100px;"
                     ></div>
-
-                    <hr class="my-4" />
-                    <h5>Historie</h5>
-                    <ul id="historyList" class="list-group"></ul>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Framework Modal -->
+<div
+        class="modal fade"
+        id="deleteFrameworkModal"
+        tabindex="-1"
+        aria-labelledby="deleteFrameworkModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFrameworkModalLabel">Verwijder Framework</h5>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                Weet je zeker dat je dit framework wilt verwijderen?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteFrameworkBtn">
+                    Verwijderen
+                </button>
             </div>
         </div>
     </div>

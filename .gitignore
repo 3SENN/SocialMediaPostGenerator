@@ -1,3 +1,5 @@
 /.env
 /profiles.json
 /node_modules/
+/frameworks.json
+frameworks.json
