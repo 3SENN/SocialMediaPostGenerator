@@ -8,6 +8,7 @@ const {
     generateTwitterPost,
     generateInstagramPost
 } = require('../backend/prompt-engineering');
+
 const { getProfiles, addProfile } = require('./profiles');
 const {
     getFrameworks,
@@ -15,8 +16,13 @@ const {
     deleteFramework
 } = require('./frameworks');
 
-let historyStore = []; // In-memory array to store generated responses
-let historyCounter = 1;
+// NEW: Import history functions
+const {
+    getHistory,
+    addHistoryItem,
+    getHistoryItemById,
+    // deleteHistoryItemById // If you want to remove history
+} = require('./history');
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
@@ -77,40 +83,46 @@ ipcMain.handle('generate-post', async (event, args) => {
         });
     }
 
-    // Store in history
-    const historyItem = {
-        id: `hist-${historyCounter++}`,
+    // Maak een history-item
+    const newHistoryItem = {
+        id: `hist-${Date.now()}`,  // of gebruik uuid
         text: result,
         timestamp: new Date().toISOString(),
         platform,
         topic
     };
-    historyStore.unshift(historyItem);
 
-    return historyItem;
+    // Sla op in history.json
+    addHistoryItem(newHistoryItem);
+
+    // Return het item terug naar renderer
+    return newHistoryItem;
 });
 
-// Geschiedenis opvragen
+// Haal de gehele geschiedenis op
 ipcMain.handle('get-history', () => {
-    return historyStore;
+    return getHistory();
 });
 
-// 1) Profielen uitlezen
+// Haal 1 item op
+ipcMain.handle('get-history-item', (event, historyId) => {
+    return getHistoryItemById(historyId);
+});
+
+// ============== PROFIELEN ==============
 ipcMain.handle('get-profiles', async () => {
     return getProfiles();
 });
 
-// 2) Nieuw profiel toevoegen
 ipcMain.handle('add-profile', async (event, newProfile) => {
     addProfile(newProfile);
     return getProfiles();
 });
 
-// 3) Profiel detail (optioneel: we can load from same getProfiles or do a separate method)
+// Profiel detail
 ipcMain.handle('get-profile-detail', async (event, profileName) => {
     const profiles = getProfiles();
-    const found = profiles.find((p) => p.name === profileName);
-    return found || null;
+    return profiles.find((p) => p.name === profileName) || null;
 });
 
 // ============== FRAMEWORKS ==============
@@ -128,7 +140,10 @@ ipcMain.handle('delete-framework', (event, frameworkId) => {
     return getFrameworks();
 });
 
-// ============== HISTORY DETAILS ==============
-ipcMain.handle('get-history-item', (event, historyId) => {
-    return historyStore.find((h) => h.id === historyId) || null;
+// (Optional) Delete history item
+/*
+ipcMain.handle('delete-history-item', (event, historyId) => {
+  deleteHistoryItemById(historyId);
+  return getHistory();
 });
+*/

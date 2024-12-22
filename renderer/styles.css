@@ -28,3 +28,7 @@ body {
 .list-group-item:hover {
     background-color: #f8f9fa;
 }
+
+#historyDetailBody {
+    white-space: pre-wrap;
+}

@@ -124,6 +124,7 @@ async function loadHistory() {
     renderHistory();
 }
 
+// Render
 function renderHistory() {
     historyList.innerHTML = '';
     history.forEach((item) => {
@@ -135,14 +136,14 @@ function renderHistory() {
     });
 }
 
+// Show one item
 async function showHistoryDetail(historyId) {
     hideAllDetailCards();
-
     const item = await ipcRenderer.invoke('get-history-item', historyId);
-    if (!item) return;
-
-    historyDetailCard.classList.remove('d-none');
-    historyDetailBody.textContent = item.text;
+    if (item) {
+        historyDetailCard.classList.remove('d-none');
+        historyDetailBody.textContent = item.text;
+    }
 }
 
 // ============== FRAMEWORKS ==============
@@ -267,3 +268,4 @@ function hideAllDetailCards() {
     historyDetailCard.classList.add('d-none');
     // frameworkDetailCard.classList.add('d-none'); // if you have a separate detail
 }
+
