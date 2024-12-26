@@ -1,0 +1,229 @@
+<!-- home.html (partial) -->
+<div id="homeWrapper">
+    <div class="row">
+        <!-- LEFT COLUMN (Profiles, Frameworks, History, etc.) -->
+        <div class="col-12 col-md-4">
+            <!-- Profielen Card -->
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <strong><i class="bi bi-person-badge me-2"></i>Profielen</strong>
+                </div>
+                <div class="card-body">
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label class="form-label">Bedrijfsnaam</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="newProfileName"
+                                    placeholder="Naam bedrijf"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Industrie</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="newProfileIndustry"
+                                    placeholder="Industrie"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doelgroep</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="newProfileAudience"
+                                    placeholder="Doelgroep"
+                            />
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            Profiel opslaan
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bestaande Profielen -->
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <strong>Bestaande Profielen</strong>
+                </div>
+                <ul id="profilesList" class="list-group list-group-flush"></ul>
+            </div>
+
+            <!-- Prompt Frameworks -->
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <strong>Prompt Frameworks</strong>
+                </div>
+                <ul id="frameworksList" class="list-group list-group-flush"></ul>
+            </div>
+
+            <!-- History -->
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <strong>Geschiedenis</strong>
+                </div>
+                <ul id="historyList" class="list-group list-group-flush"></ul>
+            </div>
+        </div><!-- /col-md-4 -->
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-12 col-md-8">
+            <!-- Detail for profiles -->
+            <div class="card mb-3 d-none" id="profileDetailCard">
+                <div class="card-header bg-info text-white">
+                    <strong>Profiel Detail</strong>
+                </div>
+                <div class="card-body" id="profileDetailBody">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- Detail for history -->
+            <div class="card mb-3 d-none" id="historyDetailCard">
+                <div class="card-header bg-info text-white">
+                    <strong>History Item Detail</strong>
+                </div>
+                <div class="card-body" id="historyDetailBody"></div>
+            </div>
+
+            <!-- AI Generator Card -->
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <strong><i class="bi bi-magic me-2"></i>AI Post Generator</strong>
+                </div>
+                <div class="card-body">
+                    <!-- Dropdown for profiel -->
+                    <div class="mb-3">
+                        <label class="form-label">Kies Profiel</label>
+                        <select class="form-select" id="profileSelect"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Platform</label>
+                        <select class="form-select" id="platform">
+                            <option value="LinkedIn" selected>LinkedIn</option>
+                            <option value="X">X (Twitter)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Taal / Language</label>
+                        <select class="form-select" id="languageSelect">
+                            <option value="Dutch" selected>Nederlands</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Onderwerp</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="topicInput"
+                                placeholder="Onderwerp"
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Extra Omschrijving</label>
+                        <textarea
+                                class="form-control"
+                                id="extraDescription"
+                                rows="3"
+                                placeholder="Voeg hier extra details toe..."
+                        ></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tone of Voice</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="toneInput"
+                                placeholder="Bijv. professioneel, informeel..."
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"
+                        >Gewenste Lengte (woorden, indicatief)</label
+                        >
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="lengthInput"
+                                placeholder="200"
+                        />
+                    </div>
+
+                    <button
+                            id="saveFrameworkBtn"
+                            class="btn btn-outline-secondary me-2"
+                    >
+                        Framework opslaan
+                    </button>
+
+                    <button id="generateBtn" class="btn btn-primary">
+                        Genereer Post
+                    </button>
+
+                    <hr class="my-4" />
+
+                    <h5>Gegenereerde Post</h5>
+                    <div
+                            id="postResult"
+                            class="border p-3"
+                            style="white-space: pre-wrap; min-height: 100px;"
+                    ></div>
+                </div>
+            </div>
+        </div><!-- /col-md-8 -->
+    </div><!-- /row -->
+
+    <!-- Delete Framework Modal -->
+    <div
+            class="modal fade"
+            id="deleteFrameworkModal"
+            tabindex="-1"
+            aria-labelledby="deleteFrameworkModalLabel"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteFrameworkModalLabel">
+                        Verwijder Framework
+                    </h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    Weet je zeker dat je dit framework wilt verwijderen?
+                </div>
+                <div class="modal-footer">
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                    >
+                        Annuleren
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-danger"
+                            id="confirmDeleteFrameworkBtn"
+                    >
+                        Verwijderen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

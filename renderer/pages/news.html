@@ -1,0 +1,119 @@
+<!-- news.html (partial) -->
+<div class="row g-3">
+    <!-- LEFT COLUMN: searching topics & results -->
+    <div class="col-12 col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-search me-2"></i>Search Topic
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="eventTopicInput"
+                            placeholder="e.g. AI, Star Wars..."
+                    />
+                    <button class="btn btn-primary" id="fetchTopicEventsBtn">
+                        <i class="bi bi-search me-1"></i> Fetch
+                    </button>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-success" id="saveSummarizeBtn">
+                        <i class="bi bi-cloud-arrow-up me-1"></i> Save & Summarize
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-list-ul me-2"></i>Topic Results
+            </div>
+            <div class="card-body">
+                <div id="topicResults" class="row g-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Summaries / Analysis Panel -->
+    <div class="col-12 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-journal-text me-2"></i>Analysis & Summaries
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">
+                    Once you fetch a topic and click “Save & Summarize,” the summary
+                    will appear here.
+                </p>
+                <hr />
+                <div id="analysisContainer" style="min-height: 100px;">
+                    <!-- We'll place our freshly generated summary text here. -->
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: Card for "Saved Summaries" -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <strong><i class="bi bi-archive me-2"></i>Saved Summaries</strong>
+                <button
+                        id="refreshSummariesBtn"
+                        class="btn btn-sm btn-light float-end"
+                        title="Refresh Summaries"
+                >
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+            <div class="card-body" id="savedSummariesList" style="max-height: 300px; overflow-y: auto;">
+                <!-- We'll render the list of previously saved summaries here. -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- detail modal for viewing a single event -->
+<div
+        class="modal fade"
+        id="eventDetailModal"
+        tabindex="-1"
+        aria-labelledby="eventDetailModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventDetailModalLabel">Event Detail</h5>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body" id="eventDetailBody">
+                <!-- filled dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NEW: Modal for viewing a single summary in detail -->
+<!-- Summary Detail Modal -->
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body" id="summaryDetailBody">
+                <!-- Dynamic content will be injected here -->
+            </div>
+            <div class="modal-footer">
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">-->
+<!--                    Close-->
+<!--                </button>-->
+            </div>
+        </div>
+    </div>
